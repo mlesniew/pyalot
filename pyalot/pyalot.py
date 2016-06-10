@@ -4,6 +4,10 @@ import requests
 PUSHALOT_API_URL = 'https://pushalot.com/api/sendmessage'
 
 
+class PyalotError(Exception):
+    pass
+
+
 def pyalot(body, title=None, source=None,
         link=None, link_title=None, image=None,
         important=False, silent=False, ttl=None,
@@ -12,10 +16,10 @@ def pyalot(body, title=None, source=None,
 
     # run a basic parameter check
     if not token:
-        raise ValueError('No Pushalot token specified')
+        raise PyalotError('No Pushalot token specified')
 
     if not body:
-        raise ValueError('Notification body empty')
+        raise PyalotError('Notification body empty')
 
     # construct the data to post
     data = {
@@ -41,8 +45,18 @@ def pyalot(body, title=None, source=None,
         data['TimeToLive'] = int(ttl)
 
     # do the REST API request
-    response = requests.post(url, data=data)
+    try:
+        response = requests.post(url, data=data)
+    except requests.exceptions.RequestException as e:
+        raise PyalotError('Request failed: %s' % e)
+    except requests.ConnectionError as e:
+        raise PyalotError('Connection failed: %s' % e)
 
-    # raise a requests exception if response code is not 2xx
-    response.raise_for_status()
+    respdata = response.json()
+
+    if not respdata:
+        raise PyalotError('Invalid REST response')
+
+    if not respdata.get('Success'):
+        raise PyalotError(respdata.get('Description', 'Unknown API error'))
 

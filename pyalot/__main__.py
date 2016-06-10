@@ -5,9 +5,7 @@ import os
 import sys
 import platform
 
-import requests
-
-from .pyalot import pyalot
+from .pyalot import pyalot, PyalotError
 
 DEFAULT_TOKEN_PATH = '~/.pushalot-token'
 
@@ -69,14 +67,8 @@ def main():
                     silent=args.silent, important=args.important,
                     ttl=args.ttl,
                     token=token)
-        except ValueError as e:
+        except PyalotError as e:
             print e
-            return 1
-        except requests.exceptions.RequestException as e:
-            print 'Request error:', e
-            return 1
-        except requests.ConnectionError as e:
-            print 'Connection error:', e
             return 1
 
     except KeyboardInterrupt:
