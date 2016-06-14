@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pyalot by mlesniew</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Pyalot</h1>
+        <p>Send Pushalot notifications from the command line or from Python code</p>
+
+        <p class="view"><a href="https://github.com/mlesniew/pyalot">View the Project on GitHub <small>mlesniew/pyalot</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mlesniew/pyalot/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mlesniew/pyalot/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mlesniew/pyalot">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="pyalot" class="anchor" href="#pyalot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pyalot</h1>
+
+<p>The pyalot package allows sending push notifications to Windows and Windows Phone devices using <a href="http://www.pushalot.com">pushalot.com</a>.</p>
+
+<p>Notifications can be sent from the <strong>command line</strong> or from <strong>Python code</strong>.</p>
+
+<h2>
+<a id="basic-command-line-usage" class="anchor" href="#basic-command-line-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic command line usage</h2>
+
+<p>Sending a text notification from the command line is simple:</p>
+
+<pre lang="sourceCode"><code>pyalot --token 11234567890abcdef234567890abcdef "Hello world"
+</code></pre>
+
+<p>The text doesn’t have to be quoted, pyalot will accept any number of positional arguments and combine them into a notification text.</p>
+
+<pre lang="sourceCode"><code>pyalot --token 11234567890abcdef234567890abcdef Hello world
+</code></pre>
+
+<p>In some cases it may be more convenient to pass the notification text through stdin instead of using parameters:</p>
+
+<pre lang="sourceCode"><code>uptime | pyalot --token 11234567890abcdef234567890abcdef --pipe
+</code></pre>
+
+<p>Don’t like passing the auth token every time? You can store your auth token in <code>~/.pushalot-token</code> as simple text. This will allow you to omit the <code>--token</code> parameter:</p>
+
+<pre lang="sourceCode"><code>echo 11234567890abcdef234567890abcdef &gt; ~/.pushalot-token
+pyalot Hello world
+</code></pre>
+
+<p>We can also use pyalot to set other, optional notification parameters. We can set the title or source, add a link or set a time-to-live value.</p>
+
+<pre lang="sourceCode"><code>pyalot --title "Important notification!" "Did you notice the title?"
+pyalot --source "Raspberry Pi" "This notification is from my Raspberry"
+pyalot --link "http://github.com" "Check out this link"
+pyalot --ttl 10 "This notification will disappear after 10 minutes"
+</code></pre>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>pyalot can be installed using pip:</p>
+
+<pre lang="sourceCode"><code>pip install pyalot
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mlesniew">mlesniew</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
