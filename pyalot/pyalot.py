@@ -52,9 +52,12 @@ def pyalot(body, title=None, source=None,
     except requests.ConnectionError as e:
         raise PyalotError('Connection failed: %s' % e)
 
-    respdata = response.json()
+    try:
+        respdata = response.json()
+    except ValueError:
+        raise PyalotError('Malformed JSON response')
 
-    if not respdata:
+    if not isinstance(respdata, dict):
         raise PyalotError('Invalid REST response')
 
     if not respdata.get('Success'):
