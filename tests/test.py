@@ -14,6 +14,7 @@ class PyalotParams(unittest.TestCase):
     TITLE = 'Notification title'
     SOURCE = 'Notification source'
     LINK = 'https://github.com/mlesniew/pyalot'
+    IMAGE = LINK + '.png'
     LINK_TITLE = 'Pyalot on Github'
 
     ARGS = {
@@ -65,6 +66,12 @@ class PyalotParams(unittest.TestCase):
     def test_link_title_only(self):
         args, json = dict(self.ARGS), dict(self.JSON)
         args.update(link_title=self.LINK_TITLE)
+        self._run_test(args, json)
+
+    def test_image(self):
+        args, json = dict(self.ARGS), dict(self.JSON)
+        args.update(image=self.IMAGE)
+        json.update(Image=self.IMAGE)
         self._run_test(args, json)
 
     def test_important(self):
