@@ -1,8 +1,10 @@
 import unittest
+import json
 
 import mock
+import requests
 
-from pyalot import pyalot
+from pyalot import pyalot, PyalotError
 
 PUSHALOT_API_URL = 'https://pushalot.com/api/sendmessage'
 
@@ -25,6 +27,9 @@ class PyalotParams(unittest.TestCase):
 
     @mock.patch('requests.post')
     def _run_test(self, args, json, post):
+        resp = mock.Mock(requests.Response)
+        resp.json = mock.Mock(return_value={'Success': True})
+        post.return_value = resp
         pyalot(**args)
         post.assert_called_with(
                 PUSHALOT_API_URL,
@@ -89,4 +94,61 @@ class PyalotParams(unittest.TestCase):
         args.update(ttl=321)
         json.update(TimeToLive=321)
         self._run_test(args, json)
+
+
+class PyalotErors(unittest.TestCase):
+    TEST_TOKEN = '0' * 32
+    BODY = 'Hello, tests!'
+
+    ARGS = {
+        'body': BODY,
+        'token': TEST_TOKEN,
+    }
+    JSON = {
+        'Body': BODY,
+        'AuthorizationToken': TEST_TOKEN,
+    }
+
+    @mock.patch('requests.post', side_effect=requests.exceptions.RequestException)
+    def _run_test(self, args, json, post):
+        post.assert_called_with(
+                PUSHALOT_API_URL,
+                data=json)
+
+    @mock.patch('requests.post', side_effect=requests.exceptions.RequestException)
+    def test_request_error(self, post):
+        with self.assertRaises(PyalotError):
+            pyalot(**self.ARGS)
+        post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
+
+    @mock.patch('requests.post', side_effect=requests.ConnectionError)
+    def test_connection_error(self, post):
+        with self.assertRaises(PyalotError):
+            pyalot(**self.ARGS)
+        post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
+
+    @mock.patch('requests.post')
+    def _test_response(self, json_fn, post):
+        resp = mock.Mock(requests.Response)
+        resp.json = json_fn
+        post.return_value = resp
+        with self.assertRaises(PyalotError):
+            pyalot(**self.ARGS)
+        post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
+
+    @mock.patch('requests.post')
+    def test_empty_response(self, post):
+        self._test_response(mock.Mock(return_value=''))
+
+    @mock.patch('requests.post')
+    def test_empty_response_json(self, post):
+        self._test_response(mock.Mock(return_value={}))
+
+    @mock.patch('requests.post')
+    def test_failure_response(self, post):
+        self._test_response(mock.Mock(return_value={ 'Success': False }))
+
+    @mock.patch('requests.post')
+    def test_malformed_json(self, post):
+        self._test_response(mock.Mock(side_effect=ValueError))
 
