@@ -117,14 +117,12 @@ class PyalotErors(unittest.TestCase):
 
     @mock.patch('requests.post', side_effect=requests.exceptions.RequestException)
     def test_request_error(self, post):
-        with self.assertRaises(PyalotError):
-            pyalot(**self.ARGS)
+        self.assertRaises(PyalotError, pyalot, **self.ARGS)
         post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
 
     @mock.patch('requests.post', side_effect=requests.ConnectionError)
     def test_connection_error(self, post):
-        with self.assertRaises(PyalotError):
-            pyalot(**self.ARGS)
+        self.assertRaises(PyalotError, pyalot, **self.ARGS)
         post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
 
     @mock.patch('requests.post')
@@ -132,8 +130,7 @@ class PyalotErors(unittest.TestCase):
         resp = mock.Mock(requests.Response)
         resp.json = json_fn
         post.return_value = resp
-        with self.assertRaises(PyalotError):
-            pyalot(**self.ARGS)
+        self.assertRaises(PyalotError, pyalot, **self.ARGS)
         post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
 
     @mock.patch('requests.post')
