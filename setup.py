@@ -33,11 +33,7 @@ setup(
     entry_points = {
         'console_scripts': ['pyalot=pyalot.__main__:main'],
     },
-    install_requires=[
-        'requests',
-    ],
-    tests_require=[
-        'mock',
-    ],
+    install_requires=list(open('requirements.txt')),
+    tests_require=list(open('dev_requirements.txt')),
     test_suite='tests',
 )
