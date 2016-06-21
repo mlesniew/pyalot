@@ -47,10 +47,10 @@ def pyalot(body, title=None, source=None,
     # do the REST API request
     try:
         response = requests.post(url, data=data)
-    except requests.exceptions.RequestException as e:
-        raise PyalotError('Request failed: %s' % e)
     except requests.ConnectionError as e:
         raise PyalotError('Connection failed: %s' % e)
+    except requests.exceptions.RequestException as e:
+        raise PyalotError('Request failed: %s' % e)
 
     try:
         respdata = response.json()
