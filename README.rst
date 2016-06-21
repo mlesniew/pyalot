@@ -9,7 +9,7 @@ Phone devices using pushalot.com_.
 
 Notifications can be sent from the **command line** or from **Python code**.
 
-|pypi| |license|
+|pypi| |license| |build|
 
 Basic command line usage
 ------------------------
@@ -67,3 +67,6 @@ pyalot can be installed using pip:
     :target: https://pypi.python.org/pypi/pyalot
 
 .. |license| image:: https://img.shields.io/pypi/l/pyalot.svg?style=flat-square
+
+.. |build| image:: https://img.shields.io/travis/mlesniew/pyalot.svg?style=flat-square
+    :target: https://travis-ci.org/mlesniew/pyalot
