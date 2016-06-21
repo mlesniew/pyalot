@@ -14,13 +14,6 @@ def pyalot(body, title=None, source=None,
         token=None,
         url=PUSHALOT_API_URL):
 
-    # run a basic parameter check
-    if not token:
-        raise PyalotError('No Pushalot token specified')
-
-    if not body:
-        raise PyalotError('Notification body empty')
-
     # construct the data to post
     data = {
         'AuthorizationToken': token,
