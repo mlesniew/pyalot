@@ -13,38 +13,43 @@ from .pyalot import pyalot, PyalotError
 
 DEFAULT_TOKEN_PATH = '~/.pushalot-token'
 
-def main():
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description='Send push notifications using pushalot.com')
+
+    parser.add_argument('--title',
+            help='set notification title')
+    parser.add_argument('--link',
+            help='add link to notification')
+    parser.add_argument('--link-title',
+            help='set link title (ignored if --link not used)')
+    parser.add_argument('--source', default=platform.node(),
+            help='set notification source, default: hostname')
+    parser.add_argument('--image',
+            help='set notification image url')
+    parser.add_argument('--ttl', type=int,
+            help='set notification timeout in minutes')
+    parser.add_argument('--silent', action='store_true',
+            help='mark notification as silent')
+    parser.add_argument('--important', action='store_true',
+            help='mark notification as important')
+    parser.add_argument('--token',
+            help='specify pushalot.com auth token')
+    parser.add_argument('--token-path', default=DEFAULT_TOKEN_PATH,
+            help='specify pushalot.com token file path; defaults to %s; '
+                'ignored if --token is used' % DEFAULT_TOKEN_PATH)
+    parser.add_argument('--pipe', action='store_true',
+            help='read notification text from stdin')
+    parser.add_argument('body', nargs='*',
+            help='notification text; ignored if --pipe used')
+
+    return parser
+
+
+def main(args=sys.argv[1:], stdin=sys.stdin):
     try:
-        parser = argparse.ArgumentParser(
-            description='Send push notifications using pushalot.com')
-
-        parser.add_argument('--title',
-                help='set notification title')
-        parser.add_argument('--link',
-                help='add link to notification')
-        parser.add_argument('--link-title',
-                help='set link title (ignored if --link not used)')
-        parser.add_argument('--source', default=platform.node(),
-                help='set notification source, default: hostname')
-        parser.add_argument('--image',
-                help='set notification image url')
-        parser.add_argument('--ttl', type=int,
-                help='set notification timeout in minutes')
-        parser.add_argument('--silent', action='store_true',
-                help='mark notification as silent')
-        parser.add_argument('--important', action='store_true',
-                help='mark notification as important')
-        parser.add_argument('--token',
-                help='specify pushalot.com auth token')
-        parser.add_argument('--token-path', default=DEFAULT_TOKEN_PATH,
-                help='specify pushalot.com token file path; defaults to %s; '
-                    'ignored if --token is used' % DEFAULT_TOKEN_PATH)
-        parser.add_argument('--pipe', action='store_true',
-                help='read notification text from stdin')
-        parser.add_argument('body', nargs='*',
-                help='notification text; ignored if --pipe used')
-
-        args = parser.parse_args()
+        parser = get_parser()
+        args = parser.parse_args(args)
 
         if args.token:
             token = args.token
@@ -58,7 +63,7 @@ def main():
 
         if args.pipe:
             # read body from stdin
-            body = '\n'.join(line for line in sys.stdin)
+            body = '\n'.join(line for line in stdin)
         else:
             # read body from arguments
             body = ' '.join(args.body)
