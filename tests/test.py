@@ -1,5 +1,4 @@
 import unittest
-import json
 
 import mock
 import requests
@@ -7,6 +6,7 @@ import requests
 from pyalot import pyalot, PyalotError
 
 PUSHALOT_API_URL = 'https://pushalot.com/api/sendmessage'
+
 
 class PyalotParams(unittest.TestCase):
     TEST_TOKEN = '0' * 32
@@ -33,8 +33,8 @@ class PyalotParams(unittest.TestCase):
         post.return_value = resp
         pyalot(**args)
         post.assert_called_with(
-                PUSHALOT_API_URL,
-                data=json)
+            PUSHALOT_API_URL,
+            data=json)
 
     def test_basic(self):
         self._run_test(self.ARGS, self.JSON)
@@ -116,13 +116,15 @@ class PyalotErors(unittest.TestCase):
         'AuthorizationToken': TEST_TOKEN,
     }
 
-    @mock.patch('requests.post', side_effect=requests.exceptions.RequestException)
+    @mock.patch('requests.post',
+                side_effect=requests.exceptions.RequestException)
     def _run_test(self, args, json, post):
         post.assert_called_with(
-                PUSHALOT_API_URL,
-                data=json)
+            PUSHALOT_API_URL,
+            data=json)
 
-    @mock.patch('requests.post', side_effect=requests.exceptions.RequestException)
+    @mock.patch('requests.post',
+                side_effect=requests.exceptions.RequestException)
     def test_request_error(self, post):
         self.assertRaises(PyalotError, pyalot, **self.ARGS)
         post.assert_called_with(PUSHALOT_API_URL, data=self.JSON)
@@ -150,9 +152,8 @@ class PyalotErors(unittest.TestCase):
 
     @mock.patch('requests.post')
     def test_failure_response(self, post):
-        self._test_response(mock.Mock(return_value={ 'Success': False }))
+        self._test_response(mock.Mock(return_value={'Success': False}))
 
     @mock.patch('requests.post')
     def test_malformed_json(self, post):
         self._test_response(mock.Mock(side_effect=ValueError))
-

@@ -12,10 +12,10 @@ class PyalotError(Exception):
 
 
 def pyalot(body, title=None, source=None,
-        link=None, link_title=None, image=None,
-        important=False, silent=False, ttl=None,
-        token=None,
-        url=PUSHALOT_API_URL):
+           link=None, link_title=None, image=None,
+           important=False, silent=False, ttl=None,
+           token=None,
+           url=PUSHALOT_API_URL):
 
     # construct the data to post
     data = {
@@ -58,4 +58,3 @@ def pyalot(body, title=None, source=None,
 
     if not respdata.get('Success'):
         raise PyalotError(respdata.get('Description', 'Unknown API error'))
-
