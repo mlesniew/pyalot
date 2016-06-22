@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import argparse
 import os
 import sys
@@ -49,7 +53,7 @@ def main():
                 with open(os.path.expanduser(args.token_path)) as f:
                     token = f.read().strip()
             except Exception as e:
-                print 'Error loading token:', e
+                print('Error loading token:', e)
                 return 1
 
         if args.pipe:
@@ -68,7 +72,7 @@ def main():
                     ttl=args.ttl,
                     token=token)
         except PyalotError as e:
-            print e
+            print(e)
             return 1
 
     except KeyboardInterrupt:
