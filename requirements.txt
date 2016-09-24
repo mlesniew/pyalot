@@ -1,1 +1,5 @@
-requests
+funcsigs==1.0.2
+mock==2.0.0
+pbr==1.10.0
+requests==2.10.0
+six==1.10.0
